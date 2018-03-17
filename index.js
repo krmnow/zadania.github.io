@@ -369,22 +369,22 @@ var dates = [];
 var allTeamMember = [];
 
 getHistoricalData().forEach(function(element, index, array) {
-    dates.push(element.date);
+  dates.push(element.date);
   var teamMember = []
   element.results.forEach(function(element, index, array) {
     var questions = [];
-    var combine = [];
     element.questions.forEach(function(element, index, array) {
         questions.push(element.value);
     });
-    combine[element.teamMemberId] = questions;
-    teamMember.push(combine);
+    teamMember[element.teamMemberId] = questions;
   });
   allTeamMember.push(teamMember);
 });
 
 dates.forEach(function(element, index, array) {
-    $("#charts").append("<canvas id=\"chart-" + index + "\" width=\"400\" height=\"400\"></canvas>");
+
+
+$("#charts").append("<canvas id=\"chart-" + index + "\" width=\"400\" height=\"400\"></canvas>");
   var ctx = $("#chart-" + index);
   var myChart = new Chart(ctx, {
     type: 'line',
@@ -392,7 +392,7 @@ dates.forEach(function(element, index, array) {
         labels: [1,2,3],
         datasets: [{
             label: 'Datum: ' + dates[index],
-            data: allTeamMember[index][0][getKey(allTeamMember[index][0])],
+            data: allTeamMember[index][getKeys(allTeamMember[index])[0]],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -426,7 +426,14 @@ dates.forEach(function(element, index, array) {
 
 });
 
-function getKey(data) {
-  for (var prop in data)
-    return prop;
+function getKeys(obj, filter) {
+    var name,
+        result = [];
+
+    for (name in obj) {
+        if ((!filter || filter.test(name)) && obj.hasOwnProperty(name)) {
+            result[result.length] = name;
+        }
+    }
+    return result;
 }
